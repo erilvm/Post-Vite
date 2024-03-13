@@ -92,7 +92,7 @@ self.addEventListener('fetch', event => {
 self.addEventListener('sync', e => {
     console.log('SW:sync');
     if ( e.tag === 'nuevo-post' ) {
-        const respuesta = postearNotes();
+        const respuesta = postearNotas();
         e.waitUntil(respuesta);
     }
 })

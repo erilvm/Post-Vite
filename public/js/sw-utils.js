@@ -20,7 +20,7 @@ function manejoApiNotas(cacheName, req) {
             return req.clone().text().then(body => {
                 
                 const bodyObj = JSON.parse(body);
-                return guardarNote(bodyObj);
+                return guardarNota(bodyObj);
             });
         } else {
             

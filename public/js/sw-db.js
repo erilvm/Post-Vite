@@ -1,6 +1,6 @@
 ﻿const db = PouchDB('notas');
 
-function guardarNote(nota) {
+function guardarNota(nota) {
     nota._id = new Date().toISOString();
     return db.put(nota).then(()=> {
         self.registration.sync.register('nuevo-post');
@@ -9,7 +9,7 @@ function guardarNote(nota) {
     });
 }
 
-function postearNotes() {
+function postearNotas() {
     const posteos = [];
     
     return db.allDocs({include_docs:true}).then(docs => {
