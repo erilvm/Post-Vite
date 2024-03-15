@@ -4,10 +4,63 @@ import { Form, Input, Button } from 'antd';
 import './NoteForm.css';
 import Header from '../Header/Header';
 import MiLista from '../List/MiLista';
+import {getToken, onMessage } from 'firebase/messaging';
+import { messaging } from '../../firebase';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 const NoteForm = () => {
-    const [notes, setNotes] = useState([]);
-    const [form] = Form.useForm();
+    const getTokenNotification = async () => {
+        const token = await getToken (messaging, {
+            vapidKey: 'BDnNDhfb0A5Clf0kv2gQBJULRf_Bg5pZtF7DrxV_dh-yjXno-8RbhNXcQbGagCODhLKxAKsIQ6Sw_58YWlfQrt4'
+        }).catch((err) => console.log('No se pudo obtener el token', err))
+        
+        if (token) {
+            console.log('Token: ', token)
+
+        } if (!token) {
+            console.log('No hay token disponible')
+        }
+
+    }
+    
+
+    const notificarme = () => {
+        if (window.Notification) {
+            console.log('Este navegador no soporta notificaciones');
+            return;
+        }
+        if (Notification.permission === 'granted') {
+        
+        getTokenNotification(); // Obtener y mostrar el token en la consola
+        
+        } else if (Notification.permission !== 'denied' || Notification.permission === 'default') {
+        
+        Notification.requestPermission((permission) => {
+        
+        console.log(permission);
+
+        if (permission === 'granted') {
+
+            getTokenNotification(); // Obtener y mostrar el token en la consola
+        }
+    });
+}
+
+};
+
+notificarme();
+useEffect(() => {
+    getTokenNotification()
+    onMessage(messaging, message => {
+        console.log('onMessage:' , message)
+        toast(message.notification.title)
+    })
+}, [])
+
+const [notes, setNotes] = useState([]);
+const [form] = Form.useForm();
 
     useEffect(() => {
         async function obtenerNotas() {
@@ -49,6 +102,7 @@ const NoteForm = () => {
 
     return (
         <div className='container'>
+            <ToastContainer />
             <Header />
 
             <Form form={form} name="note-form" onFinish={onFinish} className='Form'

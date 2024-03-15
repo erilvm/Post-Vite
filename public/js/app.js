@@ -4,9 +4,9 @@ if (navigator.serviceWorker) {
 
 const isOnline = () => {
     if (navigator.onLine) {
-        alert('¡Estás en línea!');
+        alert('¡Estás con conexion!');
     } else {
-        alert('¡Estás fuera de línea!');
+        alert('¡Estás sin conexion!');
     }
 }
 
